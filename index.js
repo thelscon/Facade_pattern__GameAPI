@@ -17,17 +17,29 @@ class GameAPI {
         return this._gameEmgine;
     }
 }
+class BaseUsers {
+}
+class BaseUsersId {
+}
+class Users {
+    users = new BaseUsers();
+    reports = new Reports();
+    wallets = new Wallets();
+    registerUser(baseUser) {
+        return 'registerUser';
+    }
+    editUser(userId, newUserData) {
+        return true;
+    }
+    changePwd(userId, newPassword) {
+        return true;
+    }
+}
 class WalletsBase {
 }
 class Wallets {
-    _wallets = new WalletsBase();
-    _reports = new Reports();
-    get wallets() {
-        return this._wallets;
-    }
-    get reports() {
-        return this._reports;
-    }
+    wallets = new WalletsBase();
+    reports = new Reports();
     getBalance(id) {
         return 1;
     }
@@ -41,16 +53,10 @@ class Wallets {
 class ReportsBase {
 }
 class Reports {
-    _reports = new ReportsBase();
-    _rowId;
-    get reports() {
-        return this._reports;
-    }
-    get rowId() {
-        return this._rowId;
-    }
+    reports = new ReportsBase();
+    rowId;
     getHistory() {
-        return this._reports;
+        return this.reports;
     }
     logEven(value) {
         return true;

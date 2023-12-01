@@ -47,20 +47,37 @@ interface IGameEngine {
     submitEntry : (userId : string , numberEntry : number) => boolean
 }
 
-interface IBaseUser {
-    [property : string ] : string
+interface IBaseUsers {
+    [id : string ] : string
 }
-interface IUser {
-    [id : string] : IBaseUser
+class BaseUsers implements IBaseUsers {
+    [id : string ] : string
+}
+interface IBaseUsersId {
+    [id : string] : IBaseUsers
+}
+class BaseUsersId implements IBaseUsersId {
+    [id : string] : IBaseUsers
 }
 interface IUsers {
-    users : IUser[]
-    reports : IReports
-    wallets : IWallets
+    readonly registerUser : (baseUser : IBaseUsers) => string
+    readonly editUser : (userId : string , newUserData : IBaseUsers) => boolean
+    readonly changePwd : (userId : string , newPassword : string) => boolean
+}
+class Users implements IUsers {
+    private readonly users : IBaseUsers = new BaseUsers ()
+    private readonly reports : IReports = new Reports ()
+    private readonly wallets : IWallets = new Wallets ()
 
-    registerUser : (baseUser : IBaseUser) => string
-    editUser : (userId : string , newUserData : IBaseUser) => boolean
-    changePwd : (userId : string , newPassword : string) => boolean
+    registerUser (baseUser : IBaseUsers) {
+        return 'registerUser'
+    }
+    editUser (userId : string , newUserData : IBaseUsers) {
+        return true
+    }
+    changePwd (userId : string , newPassword : string) {
+        return true
+    }
 }
 
 interface IWalletsBase {
@@ -70,23 +87,13 @@ class WalletsBase implements IWalletsBase {
     [id : string] : number
 }
 interface IWallets {
-    readonly wallets : IWalletsBase
-    readonly reports : IReports
-
     readonly getBalance : (userId : string) => number
     readonly adjustBalance : (userId : string , newBalance : number) => number
     readonly createWallet : (userId : string) => boolean
 }
 class Wallets implements IWallets {
-    private readonly _wallets : IWalletsBase = new WalletsBase ()
-    private readonly _reports : IReports = new Reports ()
-
-    get wallets () : IWalletsBase {
-        return this._wallets
-    }
-    get reports () : IReports {
-        return this._reports
-    }
+    private readonly wallets : IWalletsBase = new WalletsBase ()
+    private readonly reports : IReports = new Reports ()
 
     getBalance (id : string) {
         return 1
@@ -106,25 +113,15 @@ class ReportsBase implements IReportsBase {
     [id : string] : [number , string]
 }
 interface IReports {
-    readonly reports : IReportsBase
-    readonly rowId : number
-
     readonly getHistory : () => IReportsBase
     readonly logEven : (value : string) => boolean
 }
 class Reports implements IReports {
-    private readonly _reports : IReportsBase = new ReportsBase ()
-    private readonly _rowId !: number
-
-    get reports () : IReportsBase {
-        return this._reports
-    }
-    get rowId () : number {
-        return this._rowId
-    }
+    private readonly reports : IReportsBase = new ReportsBase ()
+    private readonly rowId !: number
 
     getHistory () {
-        return this._reports
+        return this.reports
     }
     logEven (value : string) {
         return true
