@@ -1,20 +1,44 @@
 "use strict";
+class GameState {
+}
 class GameAPI {
-    _wallets;
-    _reports;
-    _users;
-    _gameEmgine;
-    get wallets() {
-        return this._wallets;
+    wallets = new Wallets();
+    reports = new Reports();
+    users = new Users();
+    gameEngine = new GameEngine();
+    getBalance(balance) {
+        // операции с balance
+        return this.wallets.getBalance('');
     }
-    get reports() {
-        return this._reports;
+    gameState(id) {
+        return this.gameEngine.GameState;
     }
-    get users() {
-        return this._users;
+    getHistory() {
+        return this.reports.getHistory();
     }
-    get gameEngine() {
-        return this._gameEmgine;
+    changePwd(userId, newPassword) {
+        return this.users.changePwd(userId, newPassword);
+    }
+    submitEntry(userId, numberEntry) {
+        return this.gameEngine.submitEntry(userId, numberEntry);
+    }
+    registerUser(baseUser) {
+        return this.users.registerUser(baseUser);
+    }
+}
+class GameEngine {
+    startTime;
+    clock;
+    entries = [];
+    gameOpen;
+    reports = new Reports();
+    wallets = new Wallets();
+    gameState = new GameState();
+    get GameState() {
+        return this.gameState;
+    }
+    submitEntry(userId, numberValue) {
+        return true;
     }
 }
 class BaseUsers {

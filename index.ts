@@ -1,50 +1,67 @@
 interface IGameState {
     [id : string] : [number , string]
 }
-interface IGameAPI {
-    readonly wallets : IWallets
-    readonly reports : IReports
-    readonly users : IUsers
-    readonly gameEngine : IGameEngine
+class GameState implements IGameState {
+    [id : string] : [number , string]
+}
 
+interface IGameAPI {
     readonly getBalance : (balance : number) => number
     readonly gameState : (id : string) => IGameState
-    readonly getHistory : () => ReportsType
+    readonly getHistory : () => IReportsBase
     readonly changePwd : (userId : string , newPassword : string) => boolean
     readonly submitEntry : (userId : string , numberEntry : number) => boolean
-    readonly registerUser : (baseUser : IBaseUser) => string
+    readonly registerUser : (baseUser : IBaseUsers) => string
 }
 
 class GameAPI implements IGameAPI {
-    private readonly _wallets : IWallets
-    private readonly _reports : IReports
-    private readonly _users : IUsers
-    private readonly _gameEmgine : IGameEngine
+    private readonly wallets = new Wallets ()
+    private readonly reports = new Reports ()
+    private readonly users = new Users ()
+    private readonly gameEngine = new GameEngine ()
 
-    get wallets () : IWallets {
-        return this._wallets
+    getBalance (balance : number) {
+        // операции с balance
+        return this.wallets.getBalance ('')
     }
-    get reports () : IReports {
-        return this._reports
+    gameState (id : string) {
+        return this.gameEngine.GameState
     }
-    get users () : IUsers {
-        return this._users
+    getHistory () {
+        return this.reports.getHistory ()
     }
-    get gameEngine () : IGameEngine {
-        return this._gameEmgine
+    changePwd (userId : string,  newPassword : string) {
+        return this.users.changePwd (userId , newPassword)
+    }
+    submitEntry (userId: string, numberEntry: number) {
+        return this.gameEngine.submitEntry (userId , numberEntry)
+    }
+    registerUser (baseUser: IBaseUsers) {
+        return this.users.registerUser (baseUser)
     }
 }
 
 interface IGameEngine {
-    startTime : number
-    clock : number
-    entries : [string , number][]
-    gameOpen : boolean
-    reports : IReports
-    wallets : IWallets
-    GameState : IGameState
+    readonly GameState : IGameState
 
     submitEntry : (userId : string , numberEntry : number) => boolean
+}
+class GameEngine implements IGameEngine {
+    private startTime !: number
+    private clock !: number
+    private readonly entries : [string , number][] = []
+    private gameOpen !: boolean
+    private readonly reports = new Reports ()
+    private readonly wallets = new Wallets ()
+    private readonly gameState = new GameState ()
+
+    get GameState () : IGameState {
+        return this.gameState
+    }
+
+    submitEntry (userId : string , numberValue : number) {
+        return true
+    }
 }
 
 interface IBaseUsers {
