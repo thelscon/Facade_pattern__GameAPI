@@ -13,7 +13,6 @@ interface IGameAPI {
     readonly submitEntry : (userId : string , numberEntry : number) => boolean
     readonly registerUser : (baseUser : IBaseUsers) => string
 }
-
 class GameAPI implements IGameAPI {
     private readonly wallets = new Wallets ()
     private readonly reports = new Reports ()
